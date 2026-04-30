@@ -1,6 +1,6 @@
 import 'package:drift/drift.dart';
 import 'package:less6_month3/data/local/app_database.dart';
-import 'package:less6_month3/data/local/todo_model.dart';
+import 'package:less6_month3/model/todo_model.dart';
 
 class TodoLocalDatasource {
   final AppDatabase database;

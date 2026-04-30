@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:less6_month3/cubit/todo_cubit.dart';
+import 'package:less6_month3/viewmodel/todo_bloc.dart';
 import 'package:less6_month3/data/local/app_database.dart';
-import 'package:less6_month3/ui/widget/todo_bottom_sheet.dart';
+import 'package:less6_month3/view/widget/todo_bottom_sheet.dart';
+import 'package:less6_month3/viewmodel/todo_event.dart';
 
 class TodoCard extends StatefulWidget {
   const TodoCard({super.key, required this.todoModel});
@@ -45,12 +46,12 @@ class _TodoCardState extends State<TodoCard> {
                   ),
                 ),
                 Spacer(),
-                IconButton(
-                  onPressed: () => setState(() => done = !done),
-                  icon: Icon(
-                    done ? Icons.check_box : Icons.check_box_outline_blank,
-                    color: Colors.white,
-                  ),
+                Checkbox(
+                  value: done,
+                  onChanged: (value) {
+                    setState(() => done = value!);
+                    context.read<TodoBloc>().add(TodoDoneEvent());
+                  },
                 ),
                 IconButton(
                   onPressed: (){
@@ -86,7 +87,7 @@ class _TodoCardState extends State<TodoCard> {
                             ),
                             ElevatedButton(
                               onPressed: () {
-                                context.read<TodoCubit>().delete(widget.todoModel.id);
+                                context.read<TodoBloc>().add(TodoRemoveEvent(widget.todoModel.id));
                                 Navigator.pop(context);
                               },
                               style: ButtonStyle(

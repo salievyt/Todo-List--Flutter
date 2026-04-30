@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:less6_month3/cubit/todo_cubit.dart';
+import 'package:less6_month3/viewmodel/todo_bloc.dart';
 import 'package:less6_month3/data/local/app_database.dart';
+import 'package:less6_month3/viewmodel/todo_event.dart';
 
 class TodoBottomSheet {
   TextEditingController titleController = TextEditingController();
   TextEditingController descController = TextEditingController();
 
-  TodoBottomSheet(context, {TodoModelData? todo}) {
+  TodoBottomSheet(BuildContext context, {TodoModelData? todo}) {
     if (todo != null) {
       titleController.text = todo.title;
       descController.text = todo.description;
@@ -52,17 +53,18 @@ class TodoBottomSheet {
                 child: ElevatedButton(
                   onPressed: () {
                     if (todo == null) {
-                      context.read<TodoCubit>().addTodo(
-                        titleController.text,
-                        descController.text,
+                      context.read<TodoBloc>().add(
+                        TodoAddEvent(
+                          titleController.text,
+                          descController.text,
+                        ),
                       );
                     } else {
-                      context.read<TodoCubit>().editTodo(
-                        TodoModelData(
-                          id: todo.id,
-                          title: titleController.text,
-                          description: descController.text,
-                          done: todo.done,
+                      context.read<TodoBloc>().add(
+                        TodoUpdateEvent(
+                          titleController.text,
+                          descController.text,
+                          todo.id,
                         ),
                       );
                     }
